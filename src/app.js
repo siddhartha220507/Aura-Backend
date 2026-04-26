@@ -6,7 +6,11 @@ const app = express();
 startMidnightWatcher();
 
 app.use(cors({
-  origin: '*', // Abhi testing ke liye sab allow kar rahe hain
+  // 🚨 '*' hata diya, ab seedha allowed origins ki list de di
+  origin: [
+    'http://localhost:5173', // Tumhari local testing
+    'https://a-ura-meter-frontend-faa3.vercel.app/' // Apna asli Vercel URL dalna (bina end slash ke)
+  ],
   credentials: true
 }));
 app.use(express.json()); 
