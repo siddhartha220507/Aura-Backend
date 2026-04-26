@@ -6,12 +6,15 @@ const app = express();
 startMidnightWatcher();
 
 app.use(cors({
-  // 🚨 '*' hata diya, ab seedha allowed origins ki list de di
+  // 🚨 '*' hata diya hai, aur tumhara Vercel URL add kar diya hai
   origin: [
-    'http://localhost:5173', // Tumhari local testing
-    'https://a-ura-meter-frontend-faa3.vercel.app/' // Apna asli Vercel URL dalna (bina end slash ke)
+    'http://localhost:5173', 
+    'https://vercel.com/siddhartha220507s-projects/a-ura-meter-frontend-faa3/3nhKU3vz9arY7ZNEfzTV9HT3VUfp', // Yahan apna Asli Vercel URL daalna (bina end slash '/')
+    'https://a-ura-meter-frontend-faa3.vercel.app/' // Agar tumne custom domain lagaya hai toh wo bhi add kar do
   ],
-  credentials: true
+  credentials: true,
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // OPTIONS request zaruri hai preflight ke liye
+  allowedHeaders: ['Content-Type', 'Authorization'] // Google auth tokens in headers mein aate hain
 }));
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: false }));
