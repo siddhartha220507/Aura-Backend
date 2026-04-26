@@ -5,16 +5,21 @@ const startMidnightWatcher = require('./cron/watcher');
 const app = express();
 startMidnightWatcher();
 
+// 🚨 THE ULTIMATE VERCEL CORS BYPASS
 app.use(cors({
-  // 🚨 '*' hata diya hai, aur tumhara Vercel URL add kar diya hai
-  origin: [
-    'http://localhost:5173', 
-    'https://vercel.com/siddhartha220507s-projects/a-ura-meter-frontend-faa3/3nhKU3vz9arY7ZNEfzTV9HT3VUfp', // Yahan apna Asli Vercel URL daalna (bina end slash '/')
-    'https://a-ura-meter-frontend-faa3.vercel.app/' // Agar tumne custom domain lagaya hai toh wo bhi add kar do
-  ],
+  origin: function (origin, callback) {
+    // 1. Agar local testing chal rahi hai
+    // 2. Ya kisi bhi Vercel URL se request aa rahi hai
+    // Toh usko automatically allow kar do!
+    if (!origin || origin.includes('localhost') || origin.includes('vercel.app')) {
+      callback(null, origin); // Ye browser ko uska exact origin pass kar deta hai
+    } else {
+      callback(new Error('Not allowed by CORS Bouncer'));
+    }
+  },
   credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'], // OPTIONS request zaruri hai preflight ke liye
-  allowedHeaders: ['Content-Type', 'Authorization'] // Google auth tokens in headers mein aate hain
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+  allowedHeaders: ['Content-Type', 'Authorization', 'Accept']
 }));
 app.use(express.json()); 
 app.use(express.urlencoded({ extended: false }));
